@@ -19,32 +19,6 @@ public class UtilityMethods
     {
         return ("RolePlay+ : " + ads);
     }
-    public static void StartCalendar(RolePlayPlus plugin)
-    {
-        Sponge.getServer().getDefaultWorld().get().setGameRule("doDaylightCycle", "false");
-        if (plugin.getCalendar().getDaySeconds() <= 600 || plugin.getCalendar().getNightSeconds() <= 600)
-        {
-            plugin.getLogger().warn(rppLogger("Day and/or Night cycle is too short ..."));
-            plugin.getCalendar().setStatus(false);
-        }
-        else if ((plugin.getCalendar().getDaySeconds() + plugin.getCalendar().getNightSeconds()) > 1200)
-        {
-            plugin.getCalendarTask().equals(Task.builder().execute(plugin.getCalendar().getCycle())
-                    .interval(calculateInterval(plugin, Sponge.getServer().getDefaultWorld().get().getWorldTime()), TimeUnit.MILLISECONDS)
-                    .name("Calendar Task").submit(plugin));
-            plugin.getCalendar().setStatus(true);
-        }
-        else
-        {
-            plugin.getLogger().error(rppLogger("Something went seriously wrong ..."));
-            plugin.getCalendar().setStatus(false);
-        }
-    }
-    public static void StopCalendar(RolePlayPlus plugin)
-    {
-        plugin.getCalendarTask().cancel();
-        plugin.getCalendar().setStatus(false);
-    }
     public static long calculateInterval(RolePlayPlus plugin, long time)
     {
         if (time < 12000)

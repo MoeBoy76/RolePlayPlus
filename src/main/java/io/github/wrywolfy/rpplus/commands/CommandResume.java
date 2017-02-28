@@ -12,7 +12,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import static io.github.wrywolfy.rpplus.UtilityMethods.StartCalendar;
 import static io.github.wrywolfy.rpplus.UtilityMethods.rppLog;
 
-
 public class CommandResume implements CommandExecutor
 {
     private RolePlayPlus plugin;
@@ -29,7 +28,7 @@ public class CommandResume implements CommandExecutor
             player.sendMessage(rppLog("Resuming the Calendar ..."));
             if (!plugin.getCalendar().getStatus())
             {
-                StartCalendar(plugin);
+                plugin.getCalendarScheduler().StartCalendar();
                 player.sendMessage(rppLog("Calendar resumed ..."));
                 return CommandResult.success();
             }
@@ -44,7 +43,7 @@ public class CommandResume implements CommandExecutor
             src.sendMessage(rppLog("Resuming the Calendar ..."));
             if (!plugin.getCalendar().getStatus())
             {
-                StartCalendar(plugin);
+                plugin.getCalendarScheduler().StartCalendar();
                 src.sendMessage(rppLog("Calendar resumed ..."));
                 return CommandResult.success();
             }

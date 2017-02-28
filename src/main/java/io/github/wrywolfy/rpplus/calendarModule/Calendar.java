@@ -154,9 +154,7 @@ public class Calendar
         {
             if (world.getWorldTime() == 12000)
             {
-                plugin.getCalendarTask().equals(Task.builder().execute(plugin.getCalendar().getCycle())
-                        .interval(calculateInterval(plugin, world.getWorldTime()), TimeUnit.MILLISECONDS)
-                        .name("Calendar Task").submit(plugin));
+                plugin.getCalendarScheduler().StartCalendar();
                 world.setWorldTime(currentTime++);
             }
             else if (world.getWorldTime() == 23999)
@@ -179,9 +177,7 @@ public class Calendar
                     currentDay++;
                 }
                 world.setWorldTime(currentTime++);
-                plugin.getCalendarTask().equals(Task.builder().execute(plugin.getCalendar().getCycle())
-                        .interval(calculateInterval(plugin, world.getWorldTime()), TimeUnit.MILLISECONDS)
-                        .name("Calendar Task").submit(plugin));
+                plugin.getCalendarScheduler().StartCalendar();
             }
             else
             {

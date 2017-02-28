@@ -28,7 +28,7 @@ public class CommandPause implements CommandExecutor
             player.sendMessage(rppLog("Pausing the Calendar ..."));
             if (plugin.getCalendar().getStatus())
             {
-                StopCalendar(plugin);
+                plugin.getCalendarScheduler().StopCalendar();
                 player.sendMessage(rppLog("Calendar paused ..."));
                 return CommandResult.success();
             }
@@ -43,7 +43,7 @@ public class CommandPause implements CommandExecutor
             src.sendMessage(rppLog("Pausing the Calendar ..."));
             if (plugin.getCalendar().getStatus())
             {
-                StopCalendar(plugin);
+                plugin.getCalendarScheduler().StopCalendar();
                 src.sendMessage(rppLog("Calendar paused ..."));
                 return CommandResult.success();
             }
