@@ -49,6 +49,7 @@ public class Calendar
         months = new Month[monthCount];
         for (int i = 1; i <= monthCount; i++)
         {
+            months[i - 1] = new Month();
             months[i - 1].setName(config.getNode("months", ("month" + i), "name").getString());
             months[i - 1].setDays(config.getNode("months", ("month" + i), "days").getInt());
         }
@@ -95,11 +96,11 @@ public class Calendar
         String tempStr = "", argument = "";
         for (int i = 0; i < outputStr.length(); i++)
         {
-            if (outputStr.charAt(i) == '{' && isArgument == false)
+            if (outputStr.charAt(i) == '{' && !isArgument)
             {
                 isArgument = true;
             }
-            else if (outputStr.charAt(i) == '}' && isArgument == true)
+            else if (outputStr.charAt(i) == '}' && !isArgument)
             {
                 switch (argument)
                 {
