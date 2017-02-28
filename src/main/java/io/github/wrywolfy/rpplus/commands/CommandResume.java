@@ -9,7 +9,6 @@ import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 
-import static io.github.wrywolfy.rpplus.UtilityMethods.StartCalendar;
 import static io.github.wrywolfy.rpplus.UtilityMethods.rppLog;
 
 public class CommandResume implements CommandExecutor

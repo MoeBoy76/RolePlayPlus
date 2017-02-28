@@ -10,9 +10,6 @@ import org.spongepowered.api.command.CommandManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.*;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.scheduler.Task;
-
-import static io.github.wrywolfy.rpplus.UtilityMethods.StartCalendar;
 import static io.github.wrywolfy.rpplus.UtilityMethods.rppLogger;
 
 @Plugin(

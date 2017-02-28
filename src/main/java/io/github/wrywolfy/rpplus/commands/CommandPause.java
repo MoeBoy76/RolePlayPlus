@@ -9,7 +9,6 @@ import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 
-import static io.github.wrywolfy.rpplus.UtilityMethods.StopCalendar;
 import static io.github.wrywolfy.rpplus.UtilityMethods.rppLog;
 
 public class CommandPause implements CommandExecutor
