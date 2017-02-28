@@ -1,12 +1,8 @@
 package io.github.wrywolfy.rpplus;
 
-import com.google.inject.Inject;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
-import org.spongepowered.api.config.ConfigDir;
-import org.spongepowered.api.config.DefaultConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,12 +11,9 @@ import static io.github.wrywolfy.rpplus.UtilityMethods.rppLogger;
 
 public class ConfigManager
 {
-    @Inject
-    @ConfigDir(sharedRoot = false)
-    private File configFolder;
 
-    private File calendarFile = new File(configFolder, "calendar.conf");
-    private File networksFile = new File(configFolder, "networks.conf");
+    private File calendarFile = new File("./config/roleplayplus/", "calendar.conf");
+    private File networksFile = new File("./config/roleplayplus/", "networks.conf");
     private ConfigurationLoader<CommentedConfigurationNode> calendarNode = HoconConfigurationLoader.builder().setFile(calendarFile).build();
     private ConfigurationLoader<CommentedConfigurationNode> networksNode = HoconConfigurationLoader.builder().setFile(networksFile).build();
     private CommentedConfigurationNode calendarConfig = null;
@@ -62,6 +55,7 @@ public class ConfigManager
     {
         try
         {
+            calendarFile.mkdirs();
             calendarFile.createNewFile();
             calendarConfig = calendarNode.load();
             //start set default values
@@ -142,6 +136,7 @@ public class ConfigManager
     {
         try
         {
+            networksFile.mkdirs();
             networksFile.createNewFile();
             networksConfig = networksNode.load();
             //start set default values
