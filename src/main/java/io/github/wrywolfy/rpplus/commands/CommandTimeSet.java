@@ -26,7 +26,7 @@ public class CommandTimeSet implements CommandExecutor
     {
         try
         {
-            time = parseLong(args.<String>getOne("time").get());
+            time = args.<Long>getOne("time").get();
         }
         catch(NumberFormatException x)
         {

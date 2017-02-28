@@ -59,6 +59,8 @@ public class RolePlayPlus
     @Listener
     public void onServerStop(GameStoppedServerEvent e)
     {
+        logger.info(rppLogger("Plugin is stopping ..."));
+        calendar.stopCalendar();
         logger.info(rppLogger("Saving to configs ..."));
         configs.saveCalendarConfig();
         //configs.saveNetworksConfig();
@@ -68,5 +70,9 @@ public class RolePlayPlus
     public Calendar getCalendar()
     {
         return calendar;
+    }
+    public ConfigManager getCalendarConfig()
+    {
+        return configs;
     }
 }

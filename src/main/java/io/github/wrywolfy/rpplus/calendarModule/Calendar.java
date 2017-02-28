@@ -37,11 +37,11 @@ public class Calendar
         nightSeconds = config.getNode("cycles", "nightSeconds").getLong();
         currentDay = config.getNode("cycles", "currentDay").getInt();
         currentMonth = config.getNode("cycles", "currentMonth").getInt();
-        currentYear = config.getNode("months", "currentYear").getInt();
+        currentYear = config.getNode("cycles", "currentYear").getInt();
         outputStr = config.getNode("output").getString();
         dayCount = config.getNode("week", "dayCount").getInt();
         days = new String[dayCount];
-        for (int i = 1; i <= monthCount; i++)
+        for (int i = 1; i <= dayCount; i++)
         {
             days[i - 1] = config.getNode("week", ("day" + i)).getString();
         }
@@ -49,10 +49,14 @@ public class Calendar
         months = new Month[monthCount];
         for (int i = 1; i <= monthCount; i++)
         {
-            months[i - 1] = new Month();
-            months[i - 1].setName(config.getNode("months", ("month" + i), "name").getString());
-            months[i - 1].setDays(config.getNode("months", ("month" + i), "days").getInt());
+            months[i - 1] = new Month(config.getNode("months", ("month" + i), "name").getString(), config.getNode("months", ("month" + i), "days").getInt());
         }
+    }
+    public void saveCalendar()
+    {
+        config.getNode("cycles", "currentDay").setValue(currentDay);
+        config.getNode("cycles", "currentMonth").setValue(currentMonth);
+        config.getNode("cycles", "currentYear").setValue(currentYear);
     }
     public boolean getStatus()
     {
@@ -100,7 +104,7 @@ public class Calendar
             {
                 isArgument = true;
             }
-            else if (outputStr.charAt(i) == '}' && !isArgument)
+            else if (outputStr.charAt(i) == '}' && isArgument)
             {
                 switch (argument)
                 {
@@ -123,7 +127,15 @@ public class Calendar
                         tempStr += months[currentMonth - 1].getName();
                         break;
                     case "YY":
-                        tempStr += (currentYear % 100);
+                    {
+                        if ((currentYear % 100) < 10)
+                        {
+                            tempStr += currentYear;
+                        } else
+                        {
+                            tempStr += (currentYear % 100);
+                        }
+                    }
                         break;
                     case "YYYY":
                         tempStr += currentYear;
@@ -144,6 +156,7 @@ public class Calendar
                 tempStr += outputStr.charAt(i);
             }
         }
+        plugin.getLogger().info(rppLogger(tempStr));
         return tempStr;
     }
     private class cycleTask implements Consumer<Task>

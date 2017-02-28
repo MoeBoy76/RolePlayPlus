@@ -1,13 +1,9 @@
 package io.github.wrywolfy.rpplus;
 
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.text.serializer.TextSerializers;
-
-import java.util.concurrent.TimeUnit;
 
 public class UtilityMethods
 {
@@ -32,6 +28,6 @@ public class UtilityMethods
     }
     public static Text getTimeOutput(RolePlayPlus plugin)
     {
-        return TextSerializers.LEGACY_FORMATTING_CODE.deserialize(plugin.getCalendar().formatOutput());
+        return TextSerializers.FORMATTING_CODE.deserialize(plugin.getCalendar().formatOutput());
     }
 }

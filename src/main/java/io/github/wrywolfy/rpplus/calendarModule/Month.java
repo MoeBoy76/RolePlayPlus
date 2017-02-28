@@ -7,10 +7,15 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 public class Month
 {
     @Setting(comment="Name of Month")
-    private String name = "Empty";
+    private String name;
     @Setting(comment="Number of days in Month")
-    private int days = 0;
+    private int days;
 
+    public Month(String name, int days)
+    {
+        this.name = name;
+        this.days = days;
+    }
     public String getName()
     {
         return name;

@@ -4,18 +4,20 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static io.github.wrywolfy.rpplus.UtilityMethods.rppLogger;
 
 public class ConfigManager
 {
 
-    private File calendarFile = new File("./config/roleplayplus/", "calendar.conf");
-    private File networksFile = new File("./config/roleplayplus/", "networks.conf");
-    private ConfigurationLoader<CommentedConfigurationNode> calendarNode = HoconConfigurationLoader.builder().setFile(calendarFile).build();
-    private ConfigurationLoader<CommentedConfigurationNode> networksNode = HoconConfigurationLoader.builder().setFile(networksFile).build();
+    private Path calendarFile = Paths.get("./config/roleplayplus/calendar.conf");
+    private Path networksFile = Paths.get("./config/roleplayplus/networks.conf");
+    private ConfigurationLoader<CommentedConfigurationNode> calendarNode = HoconConfigurationLoader.builder().setPath(calendarFile).build();
+    private ConfigurationLoader<CommentedConfigurationNode> networksNode = HoconConfigurationLoader.builder().setPath(networksFile).build();
     private CommentedConfigurationNode calendarConfig = null;
     private CommentedConfigurationNode networksConfig = null;
     private RolePlayPlus plugin;
@@ -23,7 +25,11 @@ public class ConfigManager
     public ConfigManager(RolePlayPlus plugin)
     {
         this.plugin = plugin;
-        if (!calendarFile.exists())
+        reloadConfigs();
+    }
+    public void reloadConfigs()
+    {
+        if (Files.notExists(calendarFile))
         {
             createCalendarConfig();
         }
@@ -31,7 +37,7 @@ public class ConfigManager
         {
             loadCalendarConfig();
         }
-        //if (!networksFile.exists())
+        //if (Files.notExists(networksFile))
         //{
         //    createNetworksConfig();
         //}
@@ -40,7 +46,7 @@ public class ConfigManager
         //    loadNetworksConfig();
         //}
     }
-    private void loadCalendarConfig()
+    public void loadCalendarConfig()
     {
         try
         {
@@ -55,8 +61,8 @@ public class ConfigManager
     {
         try
         {
-            calendarFile.mkdirs();
-            calendarFile.createNewFile();
+            Files.createDirectories(Paths.get("./config/roleplayplus/"));
+            Files.createFile(calendarFile);
             calendarConfig = calendarNode.load();
             //start set default values
             calendarConfig.getNode("cycles", "daySeconds").setValue(1200);
@@ -101,8 +107,8 @@ public class ConfigManager
             calendarConfig.getNode("months", "month12", "name").setValue("December");
             calendarConfig.getNode("months", "month12", "days").setValue(31);
             //end set default values
-            plugin.getLogger().info(rppLogger("New calendar.conf generated ..."));
             calendarNode.save(calendarConfig);
+            plugin.getLogger().info(rppLogger("New calendar.conf generated ..."));
         }
         catch (IOException x)
         {
@@ -113,6 +119,7 @@ public class ConfigManager
     {
         try
         {
+            plugin.getCalendar().saveCalendar();
             calendarNode.save(calendarConfig);
             plugin.getLogger().info(rppLogger("calendar.conf has been saved ..."));
         }
@@ -136,8 +143,8 @@ public class ConfigManager
     {
         try
         {
-            networksFile.mkdirs();
-            networksFile.createNewFile();
+            Files.createDirectories(Paths.get("./config/roleplayplus/"));
+            Files.createFile(networksFile);
             networksConfig = networksNode.load();
             //start set default values
 
