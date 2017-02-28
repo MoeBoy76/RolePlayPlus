@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/RolePlayPlus.iml" filepath="$PROJECT_DIR$/.idea/modules/RolePlayPlus.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/RolePlayPlus_main.iml" filepath="$PROJECT_DIR$/.idea/modules/RolePlayPlus_main.iml" group="RolePlayPlus" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/RolePlayPlus_test.iml" filepath="$PROJECT_DIR$/.idea/modules/RolePlayPlus_test.iml" group="RolePlayPlus" />
+    </modules>
+  </component>
+</project>
