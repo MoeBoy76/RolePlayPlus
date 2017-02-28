@@ -27,7 +27,7 @@ public class CommandResume implements CommandExecutor
             player.sendMessage(rppLog("Resuming the Calendar ..."));
             if (!plugin.getCalendar().getStatus())
             {
-                plugin.getCalendarScheduler().StartCalendar();
+                plugin.getCalendar().startNewCalendar();
                 player.sendMessage(rppLog("Calendar resumed ..."));
                 return CommandResult.success();
             }
@@ -42,7 +42,7 @@ public class CommandResume implements CommandExecutor
             src.sendMessage(rppLog("Resuming the Calendar ..."));
             if (!plugin.getCalendar().getStatus())
             {
-                plugin.getCalendarScheduler().StartCalendar();
+                plugin.getCalendar().startNewCalendar();
                 src.sendMessage(rppLog("Calendar resumed ..."));
                 return CommandResult.success();
             }

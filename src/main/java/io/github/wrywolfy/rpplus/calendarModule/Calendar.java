@@ -18,10 +18,10 @@ public class Calendar
     private WorldProperties world;
     private CommentedConfigurationNode config;
     private RolePlayPlus plugin;
-    private CycleTask cycle;
     private long daySeconds, nightSeconds, currentTime;
     private int dayCount, monthCount, currentDay, currentMonth, currentYear;
     private String outputStr;
+    private Task.Builder calendarTask = Task.builder();
     String[] days;
     Month[] months;
     public Calendar(CommentedConfigurationNode config, RolePlayPlus plugin)
@@ -146,16 +146,19 @@ public class Calendar
         }
         return tempStr;
     }
-    private class CycleTask implements Consumer<Task>
+    private class cycleTask implements Consumer<Task>
     {
-        //task
-        @Override
         public void accept(Task task)
         {
+            if (!calendarOn)
+            {
+                task.cancel();
+            }
             if (world.getWorldTime() == 12000)
             {
-                plugin.getCalendarScheduler().StartCalendar();
                 world.setWorldTime(currentTime++);
+                startCalendar();
+                task.cancel();
             }
             else if (world.getWorldTime() == 23999)
             {
@@ -177,7 +180,8 @@ public class Calendar
                     currentDay++;
                 }
                 world.setWorldTime(currentTime++);
-                plugin.getCalendarScheduler().StartCalendar();
+                startCalendar();
+                task.cancel();
             }
             else
             {
@@ -185,8 +189,37 @@ public class Calendar
             }
         }
     }
-    public CycleTask getCycle()
+    public void startNewCalendar()
     {
-        return cycle;
+        Sponge.getServer().getDefaultWorld().get().setGameRule("doDaylightCycle", "false");
+        if (plugin.getCalendar().getDaySeconds() <= 600 || plugin.getCalendar().getNightSeconds() <= 600)
+        {
+            plugin.getLogger().warn(rppLogger("Day and/or Night cycle is too short ..."));
+            plugin.getCalendar().setStatus(false);
+        }
+        else if ((plugin.getCalendar().getDaySeconds() + plugin.getCalendar().getNightSeconds()) > 1200)
+        {
+            calendarTask.execute(new cycleTask())
+                    .interval(calculateInterval(plugin, Sponge.getServer().getDefaultWorld().get().getWorldTime()), TimeUnit.MILLISECONDS)
+                    .name("Calendar Task").submit(plugin);
+            plugin.getCalendar().setStatus(true);
+        }
+        else
+        {
+            plugin.getLogger().error(rppLogger("Something went seriously wrong ..."));
+            plugin.getCalendar().setStatus(false);
+        }
+    }
+    public void startCalendar()
+    {
+        calendarTask.execute(new cycleTask())
+                .interval(calculateInterval(plugin, Sponge.getServer().getDefaultWorld().get().getWorldTime()), TimeUnit.MILLISECONDS)
+                .name("Calendar Task").submit(plugin);
+        plugin.getCalendar().setStatus(true);
+    }
+    public void stopCalendar()
+    {
+        calendarOn = false;
+        plugin.getCalendar().setStatus(false);
     }
 }

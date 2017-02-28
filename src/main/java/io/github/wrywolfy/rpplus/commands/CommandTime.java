@@ -24,7 +24,7 @@ public class CommandTime implements CommandExecutor
         if (src instanceof Player)
         {
             Player player = (Player) src;
-            src.sendMessage(getTimeOutput(plugin));
+            player.sendMessage(getTimeOutput(plugin));
             return CommandResult.success();
         }
         else if (src instanceof ConsoleSource)

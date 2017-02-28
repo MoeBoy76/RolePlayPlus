@@ -3,7 +3,6 @@ package io.github.wrywolfy.rpplus;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import io.github.wrywolfy.rpplus.calendarModule.Calendar;
-import io.github.wrywolfy.rpplus.calendarModule.CalendarScheduler;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandManager;
@@ -29,7 +28,6 @@ public class RolePlayPlus
     private Calendar calendar;
     private CommandInitializer commands;
     private ConfigManager configs;
-    private CalendarScheduler calendarTask;
 
     @Listener
     public void preInitialization(GamePreInitializationEvent e)
@@ -50,13 +48,12 @@ public class RolePlayPlus
     public void onServerStart(GameStartedServerEvent e)
     {
         logger.info(rppLogger("Plugin is starting ..."));
-        calendarTask = new CalendarScheduler(this);
         configs = new ConfigManager(this);
         calendar = new Calendar(configs.getCalendarConfig(), this);
         commands = new CommandInitializer(this);
         CommandManager cmdManager = Sponge.getCommandManager();
         cmdManager.register(this, commands.InitializeCommands(), Lists.newArrayList("roleplayplus", "rpp", "roleplay+", "rp+"));
-        calendarTask.StartCalendar();
+        calendar.startNewCalendar();
         logger.info(rppLogger("Plugin has started ..."));
     }
     @Listener
@@ -71,9 +68,5 @@ public class RolePlayPlus
     public Calendar getCalendar()
     {
         return calendar;
-    }
-    public CalendarScheduler getCalendarScheduler()
-    {
-        return calendarTask;
     }
 }

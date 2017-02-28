@@ -37,8 +37,8 @@ public class CommandTimeSet implements CommandExecutor
         {
             Player player = (Player) src;
             plugin.getCalendar().setTime(time);
-            src.sendMessage(rppLog("Time set to ..."));
-            src.sendMessage(getTimeOutput(plugin));
+            player.sendMessage(rppLog("Time set to ..."));
+            player.sendMessage(getTimeOutput(plugin));
             return CommandResult.success();
         }
         else if (src instanceof ConsoleSource)
