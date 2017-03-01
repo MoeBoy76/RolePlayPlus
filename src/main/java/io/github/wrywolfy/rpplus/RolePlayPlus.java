@@ -26,7 +26,6 @@ public class RolePlayPlus
         return logger;
     }
     private Calendar calendar;
-    private CommandInitializer commands;
     private ConfigManager configs;
 
     @Listener
@@ -50,7 +49,7 @@ public class RolePlayPlus
         logger.info(rppLogger("Plugin is starting ..."));
         configs = new ConfigManager(this);
         calendar = new Calendar(configs.getCalendarConfig(), this);
-        commands = new CommandInitializer(this);
+        CommandInitializer commands = new CommandInitializer(this);
         CommandManager cmdManager = Sponge.getCommandManager();
         cmdManager.register(this, commands.InitializeCommands(), Lists.newArrayList("roleplayplus", "rpp", "roleplay+", "rp+"));
         calendar.startNewCalendar();

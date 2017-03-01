@@ -19,11 +19,11 @@ public class UtilityMethods
     {
         if (time < 12000)
         {
-            return ((plugin.getCalendar().getDaySeconds() * 1000) / 600000);
+            return (((plugin.getCalendar().getDaySeconds() * 1000) / 600000) * 50);
         }
         else
         {
-            return ((plugin.getCalendar().getNightSeconds() * 1000) / 600000);
+            return (((plugin.getCalendar().getNightSeconds() * 1000) / 600000) * 50);
         }
     }
     public static Text getTimeOutput(RolePlayPlus plugin)

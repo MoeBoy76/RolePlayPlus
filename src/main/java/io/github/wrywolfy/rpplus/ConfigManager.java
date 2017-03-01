@@ -71,8 +71,9 @@ public class ConfigManager
             calendarConfig.getNode("cycles", "currentDay").setValue(1);
             calendarConfig.getNode("cycles", "currentMonth").setValue(1);
             calendarConfig.getNode("cycles", "currentYear").setValue(2000);
-            calendarConfig.getNode("output").setComment("Format of the '/rpp time' command output. \n Possible arguments include : {D}, {DD}, {DAY}, {M}, {MM}, {MONTH}, {YY}, {YYYY}, {H}, {HH}, {H+}, {HH+}, {MIN}, {ampm}, {AMPM}");
+            calendarConfig.getNode("output").setComment("Format of the '/rpp time' command output. \n Possible arguments include : {D}, {DD}, {Day}, {DAY}, {M}, {MM}, {Month}, {MONTH}, {YY}, {YYYY}, {H}, {HH}, {H+}, {HH+}, {MIN}, {ampm}, {AMPM}");
             calendarConfig.getNode("output").setValue("&3[&e{MM}/{DD}/{YYYY}&3] &e{H}:{MIN}{ampm}");
+            calendarConfig.getNode("week", "dayCount").setComment("How many days there are in a week. (Must match number of days provided.)");
             calendarConfig.getNode("week", "dayCount").setValue(7);
             //set days
             calendarConfig.getNode("week", "day1").setValue("Sunday");
@@ -82,6 +83,7 @@ public class ConfigManager
             calendarConfig.getNode("week", "day5").setValue("Thursday");
             calendarConfig.getNode("week", "day6").setValue("Friday");
             calendarConfig.getNode("week", "day7").setValue("Saturday");
+            calendarConfig.getNode("months", "monthCount").setComment("How many months there are in a year. (Must match number of months provided.)");
             calendarConfig.getNode("months", "monthCount").setValue(12);
             //set months
             calendarConfig.getNode("months", "month1", "name").setValue("January");

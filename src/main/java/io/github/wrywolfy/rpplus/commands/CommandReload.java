@@ -39,7 +39,7 @@ public class CommandReload implements CommandExecutor
             else
             {
                 player.sendMessage(rppLog("Reloading calendar.conf ..."));
-                plugin.getCalendarConfig().loadCalendarConfig();
+                plugin.getCalendarConfig().reloadConfigs();
                 plugin.getCalendar().setCalendar();
                 return CommandResult.success();
             }
@@ -61,7 +61,7 @@ public class CommandReload implements CommandExecutor
             else
             {
                 src.sendMessage(rppLog("Reloading configs ..."));
-                plugin.getCalendarConfig().loadCalendarConfig();
+                plugin.getCalendarConfig().reloadConfigs();
                 plugin.getCalendar().setCalendar();
                 return CommandResult.success();
             }

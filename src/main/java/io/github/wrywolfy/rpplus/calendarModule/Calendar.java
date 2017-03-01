@@ -22,8 +22,8 @@ public class Calendar
     private int dayCount, monthCount, currentDay, currentMonth, currentYear;
     private String outputStr;
     private Task.Builder calendarTask = Task.builder();
-    String[] days;
-    Month[] months;
+    private String[] days;
+    private Month[] months;
     public Calendar(CommentedConfigurationNode config, RolePlayPlus plugin)
     {
         this.config = config;
@@ -62,7 +62,7 @@ public class Calendar
     {
         return calendarOn;
     }
-    public void setStatus(boolean status)
+    private void setStatus(boolean status)
     {
         calendarOn = status;
     }
@@ -97,7 +97,8 @@ public class Calendar
     public String formatOutput()
     {
         boolean isArgument = false;
-        String tempStr = "", argument = "";
+        StringBuilder tempStr = new StringBuilder();
+        StringBuilder argument = new StringBuilder();
         for (int i = 0; i < outputStr.length(); i++)
         {
             if (outputStr.charAt(i) == '{' && !isArgument)
@@ -106,50 +107,56 @@ public class Calendar
             }
             else if (outputStr.charAt(i) == '}' && isArgument)
             {
-                switch (argument)
+                switch (argument.toString())
                 {
                     case "D":
-                        tempStr += currentDay;
+                        tempStr.append(currentDay);
                         break;
                     case "DD":
-                        tempStr += String.format("%02d", currentDay);
+                        tempStr.append(String.format("%02d", currentDay));
+                        break;
+                    case "Day":
+                        tempStr.append(getDay());
                         break;
                     case "DAY":
-                        tempStr += getDay();
+                        tempStr.append(getDay().toUpperCase());
                         break;
                     case "M":
-                        tempStr += currentMonth;
+                        tempStr.append(currentMonth);
                         break;
                     case "MM":
-                        tempStr += String.format("%02d", currentMonth);
+                        tempStr.append(String.format("%02d", currentMonth));
+                        break;
+                    case "Month":
+                        tempStr.append(months[currentMonth - 1].getName());
                         break;
                     case "MONTH":
-                        tempStr += months[currentMonth - 1].getName();
+                        tempStr.append(months[currentMonth - 1].getName().toUpperCase());
                         break;
                     case "YY":
                     {
                         if ((currentYear % 100) < 10)
                         {
-                            tempStr += currentYear;
+                            tempStr.append(currentYear);
                         } else
                         {
-                            tempStr += (currentYear % 100);
+                            tempStr.append(currentYear % 100);
                         }
                         break;
                     }
                     case "YYYY":
-                        tempStr += currentYear;
+                        tempStr.append(currentYear);
                         break;
                     case "H":
                     {
                         int hour = getHour();
                         if (hour > 12)
                         {
-                            tempStr += (hour - 12);
+                            tempStr.append(hour - 12);
                         }
                         else
                         {
-                            tempStr += hour;
+                            tempStr.append(hour);
                         }
                         break;
                     }
@@ -162,38 +169,38 @@ public class Calendar
                         }
                         if (hour < 10)
                         {
-                            tempStr += 0;
+                            tempStr.append(0);
                         }
-                        tempStr += hour;
+                        tempStr.append(hour);
                         break;
                     }
                     case "H+":
-                        tempStr += getHour();
+                        tempStr.append(getHour());
                         break;
                     case "HH+":
                     {
                         int hour = getHour();
                         if (hour < 10)
                         {
-                            tempStr += 0;
+                            tempStr.append(0);
                         }
-                        tempStr += hour;
+                        tempStr.append(hour);
                         break;
                     }
                     case "MIN":
                     {
-                        tempStr += getMinuteStr();
+                        tempStr.append(getMinuteStr());
                         break;
                     }
                     case "ampm":
                     {
                         if (isDay())
                         {
-                            tempStr += "am";
+                            tempStr.append("am");
                         }
                         else
                         {
-                            tempStr += "pm";
+                            tempStr.append("pm");
                         }
                         break;
                     }
@@ -201,11 +208,11 @@ public class Calendar
                     {
                         if (isDay())
                         {
-                            tempStr += "AM";
+                            tempStr.append("AM");
                         }
                         else
                         {
-                            tempStr += "PM";
+                            tempStr.append("PM");
                         }
                         break;
                     }
@@ -213,19 +220,19 @@ public class Calendar
                         plugin.getLogger().warn(rppLogger("Error reading Calendar output format ..."));
                         break;
                 }
-                argument = "";
+                argument = new StringBuilder();
                 isArgument = false;
             }
             else if(isArgument)
             {
-                argument += outputStr.charAt(i);
+                argument.append(outputStr.charAt(i));
             }
             else
             {
-                tempStr += outputStr.charAt(i);
+                tempStr.append(outputStr.charAt(i));
             }
         }
-        return tempStr;
+        return tempStr.toString();
     }
     private int getHour()
     {
@@ -326,7 +333,7 @@ public class Calendar
             plugin.getCalendar().setStatus(false);
         }
     }
-    public void startCalendar()
+    private void startCalendar()
     {
         calendarTask.execute(new cycleTask())
                 .interval(calculateInterval(plugin, Sponge.getServer().getDefaultWorld().get().getWorldTime()), TimeUnit.MILLISECONDS)
