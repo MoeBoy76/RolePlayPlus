@@ -135,11 +135,80 @@ public class Calendar
                         {
                             tempStr += (currentYear % 100);
                         }
-                    }
                         break;
+                    }
                     case "YYYY":
                         tempStr += currentYear;
                         break;
+                    case "H":
+                    {
+                        int hour = getHour();
+                        if (hour > 12)
+                        {
+                            tempStr += (hour - 12);
+                        }
+                        else
+                        {
+                            tempStr += hour;
+                        }
+                        break;
+                    }
+                    case "HH":
+                    {
+                        int hour = getHour();
+                        if (hour > 12)
+                        {
+                            hour -= 12;
+                        }
+                        if (hour < 10)
+                        {
+                            tempStr += 0;
+                        }
+                        tempStr += hour;
+                        break;
+                    }
+                    case "H+":
+                        tempStr += getHour();
+                        break;
+                    case "HH+":
+                    {
+                        int hour = getHour();
+                        if (hour < 10)
+                        {
+                            tempStr += 0;
+                        }
+                        tempStr += hour;
+                        break;
+                    }
+                    case "MIN":
+                    {
+                        tempStr += getMinuteStr();
+                        break;
+                    }
+                    case "ampm":
+                    {
+                        if (isDay())
+                        {
+                            tempStr += "am";
+                        }
+                        else
+                        {
+                            tempStr += "pm";
+                        }
+                        break;
+                    }
+                    case "AMPM":
+                    {
+                        if (isDay())
+                        {
+                            tempStr += "AM";
+                        }
+                        else
+                        {
+                            tempStr += "PM";
+                        }
+                        break;
+                    }
                     default:
                         plugin.getLogger().warn(rppLogger("Error reading Calendar output format ..."));
                         break;
@@ -159,6 +228,40 @@ public class Calendar
         plugin.getLogger().info(rppLogger(tempStr));
         return tempStr;
     }
+    private int getHour()
+    {
+        int hour = (int)(currentTime / 1000 + 6);
+        if (hour == 24)
+        {
+            return hour;
+        }
+        else
+        {
+            return hour  % 24;
+        }
+    }
+    private String getMinuteStr()
+    {
+        int minute = (int) ((currentTime % 1000) / (100. / 6.));
+        String str = "";
+        if (minute < 10)
+        {
+            str += 0;
+        }
+        str += minute;
+        return str;
+    }
+    private boolean isDay()
+    {
+        if (currentTime < 12000)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     private class cycleTask implements Consumer<Task>
     {
         public void accept(Task task)
@@ -167,13 +270,13 @@ public class Calendar
             {
                 task.cancel();
             }
-            if (world.getWorldTime() == 12000)
+            else if (currentTime == 12000)
             {
-                world.setWorldTime(currentTime++);
+                world.setWorldTime(++currentTime);
                 startCalendar();
                 task.cancel();
             }
-            else if (world.getWorldTime() == 23999)
+            else if (currentTime >= 23999)
             {
                 if (currentDay == months[currentMonth - 1].getDays())
                 {
@@ -192,13 +295,14 @@ public class Calendar
                 {
                     currentDay++;
                 }
-                world.setWorldTime(currentTime++);
+                currentTime = 0;
+                world.setWorldTime(currentTime);
                 startCalendar();
                 task.cancel();
             }
             else
             {
-                world.setWorldTime(currentTime++);
+                world.setWorldTime(++currentTime);
             }
         }
     }
