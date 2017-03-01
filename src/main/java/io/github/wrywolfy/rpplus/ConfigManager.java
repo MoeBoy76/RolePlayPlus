@@ -17,8 +17,8 @@ public class ConfigManager
     private Path networksFile = Paths.get("./config/roleplayplus/networks.conf");
     private ConfigurationLoader<CommentedConfigurationNode> calendarNode = HoconConfigurationLoader.builder().setPath(calendarFile).build();
     private ConfigurationLoader<CommentedConfigurationNode> networksNode = HoconConfigurationLoader.builder().setPath(networksFile).build();
-    private CommentedConfigurationNode calendarConfig = null;
-    private CommentedConfigurationNode networksConfig = null;
+    private CommentedConfigurationNode calendarConfig;
+    private CommentedConfigurationNode networksConfig;
     private RolePlayPlus plugin;
 
     public ConfigManager(RolePlayPlus plugin)
@@ -64,15 +64,15 @@ public class ConfigManager
             Files.createFile(calendarFile);
             calendarConfig = calendarNode.load();
             //start set default values
-            calendarConfig.getNode("cycles", "daySeconds").setComment("Period a day cycle lasts (in seconds)");
+            calendarConfig.getNode("cycles", "daySeconds").setComment("How long a day cycle lasts (in seconds)");
             calendarConfig.getNode("cycles", "daySeconds").setValue(1200);
-            calendarConfig.getNode("cycles", "nightSeconds").setComment("Period a night cycle lasts (in seconds)");
+            calendarConfig.getNode("cycles", "nightSeconds").setComment("How long a night cycle lasts (in seconds)");
             calendarConfig.getNode("cycles", "nightSeconds").setValue(1200);
             calendarConfig.getNode("cycles", "currentDay").setValue(1);
             calendarConfig.getNode("cycles", "currentMonth").setValue(1);
             calendarConfig.getNode("cycles", "currentYear").setValue(2000);
-            calendarConfig.getNode("output").setComment("Format of the '/rpp time' command. Possible arguments include : {D}, {DD}, {DAY}, {M}, {MM}, {MONTH}, {YY}, {YYYY}, {H}, {HH}, {H+}, {HH+}, {MIN}, {ampm}, {AMPM}");
-            calendarConfig.getNode("output").setValue("&3[&e{MM}/{DD}/{YYYY}&3] &e{H}:{MIN} {ampm}");
+            calendarConfig.getNode("output").setComment("Format of the '/rpp time' command output. \n Possible arguments include : {D}, {DD}, {DAY}, {M}, {MM}, {MONTH}, {YY}, {YYYY}, {H}, {HH}, {H+}, {HH+}, {MIN}, {ampm}, {AMPM}");
+            calendarConfig.getNode("output").setValue("&3[&e{MM}/{DD}/{YYYY}&3] &e{H}:{MIN}{ampm}");
             calendarConfig.getNode("week", "dayCount").setValue(7);
             //set days
             calendarConfig.getNode("week", "day1").setValue("Sunday");

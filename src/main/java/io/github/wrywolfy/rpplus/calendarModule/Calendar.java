@@ -225,7 +225,6 @@ public class Calendar
                 tempStr += outputStr.charAt(i);
             }
         }
-        plugin.getLogger().info(rppLogger(tempStr));
         return tempStr;
     }
     private int getHour()
@@ -253,9 +252,9 @@ public class Calendar
     }
     private boolean isDay()
     {
-        if (currentTime < 12000)
+        if (currentTime >= 6000 && currentTime < 18000)
         {
-            return true;
+            return false;
         }
         else
         {
