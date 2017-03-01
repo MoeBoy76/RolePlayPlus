@@ -29,10 +29,11 @@ public class Calendar
         this.config = config;
         this.plugin = plugin;
         world = Sponge.getServer().getDefaultWorld().get();
-        setCalendar();
+        setCalendar(config);
     }
-    public void setCalendar()
+    public void setCalendar(CommentedConfigurationNode config)
     {
+        this.config = config;
         daySeconds = config.getNode("cycles", "daySeconds").getLong();
         nightSeconds = config.getNode("cycles", "nightSeconds").getLong();
         currentDay = config.getNode("cycles", "currentDay").getInt();

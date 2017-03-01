@@ -6,9 +6,17 @@ import io.github.wrywolfy.rpplus.calendarModule.Calendar;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandManager;
+import org.spongepowered.api.data.type.HandTypes;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.game.state.*;
+import org.spongepowered.api.event.block.InteractBlockEvent;
+import org.spongepowered.api.event.filter.cause.Root;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
+import org.spongepowered.api.event.game.state.GameStoppedServerEvent;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.plugin.Plugin;
+
+import static io.github.wrywolfy.rpplus.UtilityMethods.getTimeOutput;
 import static io.github.wrywolfy.rpplus.UtilityMethods.rppLogger;
 
 @Plugin(
@@ -28,21 +36,6 @@ public class RolePlayPlus
     private Calendar calendar;
     private ConfigManager configs;
 
-    @Listener
-    public void preInitialization(GamePreInitializationEvent e)
-    {
-
-    }
-    @Listener
-    public void onInitialization(GameInitializationEvent e)
-    {
-
-    }
-    @Listener
-    public void postInitialization(GamePostInitializationEvent e)
-    {
-
-    }
     @Listener
     public void onServerStart(GameStartedServerEvent e)
     {
@@ -64,6 +57,14 @@ public class RolePlayPlus
         configs.saveCalendarConfig();
         //configs.saveNetworksConfig();
         logger.info(rppLogger("Plugin has stopped ..."));
+    }
+    @Listener
+    public void rightClickCompass(InteractBlockEvent.Secondary.MainHand event, @Root Player player)
+    {
+        if (player.getItemInHand(HandTypes.MAIN_HAND).get().getItem() == ItemTypes.CLOCK)
+        {
+            player.sendMessage(getTimeOutput(this));
+        }
     }
     //utility methods
     public Calendar getCalendar()

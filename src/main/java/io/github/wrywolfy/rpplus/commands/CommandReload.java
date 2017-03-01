@@ -31,7 +31,7 @@ public class CommandReload implements CommandExecutor
                 plugin.getCalendar().stopCalendar();
                 player.sendMessage(rppLog("Reloading calendar.conf ..."));
                 plugin.getCalendarConfig().reloadConfigs();
-                plugin.getCalendar().setCalendar();
+                plugin.getCalendar().setCalendar(plugin.getCalendarConfig().getCalendarConfig());
                 player.sendMessage(rppLog("Resuming the Calendar ..."));
                 plugin.getCalendar().startNewCalendar();
                 return CommandResult.success();
@@ -40,7 +40,7 @@ public class CommandReload implements CommandExecutor
             {
                 player.sendMessage(rppLog("Reloading calendar.conf ..."));
                 plugin.getCalendarConfig().reloadConfigs();
-                plugin.getCalendar().setCalendar();
+                plugin.getCalendar().setCalendar(plugin.getCalendarConfig().getCalendarConfig());
                 return CommandResult.success();
             }
         }
@@ -53,7 +53,7 @@ public class CommandReload implements CommandExecutor
                 plugin.getCalendar().stopCalendar();
                 src.sendMessage(rppLog("Reloading calendar.conf ..."));
                 plugin.getCalendarConfig().reloadConfigs();
-                plugin.getCalendar().setCalendar();
+                plugin.getCalendar().setCalendar(plugin.getCalendarConfig().getCalendarConfig());
                 src.sendMessage(rppLog("Resuming the Calendar ..."));
                 plugin.getCalendar().startNewCalendar();
                 return CommandResult.success();
@@ -62,7 +62,7 @@ public class CommandReload implements CommandExecutor
             {
                 src.sendMessage(rppLog("Reloading configs ..."));
                 plugin.getCalendarConfig().reloadConfigs();
-                plugin.getCalendar().setCalendar();
+                plugin.getCalendar().setCalendar(plugin.getCalendarConfig().getCalendarConfig());
                 return CommandResult.success();
             }
         }
