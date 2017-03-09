@@ -3,6 +3,7 @@ package io.github.wrywolfy.rpplus;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import io.github.wrywolfy.rpplus.calendarModule.Calendar;
+import io.github.wrywolfy.rpplus.networksModule.Networks;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandManager;
@@ -34,6 +35,7 @@ public class RolePlayPlus
         return logger;
     }
     private Calendar calendar;
+    private Networks networks;
     private ConfigManager configs;
 
     @Listener
@@ -42,6 +44,7 @@ public class RolePlayPlus
         logger.info(rppLogger("Plugin is starting ..."));
         configs = new ConfigManager(this);
         calendar = new Calendar(configs.getCalendarConfig(), this);
+        networks = new Networks(configs.getNetworksConfig(), this);
         CommandInitializer commands = new CommandInitializer(this);
         CommandManager cmdManager = Sponge.getCommandManager();
         cmdManager.register(this, commands.InitializeCommands(), Lists.newArrayList("roleplayplus", "rpp", "roleplay+", "rp+"));
@@ -55,7 +58,7 @@ public class RolePlayPlus
         calendar.stopCalendar();
         logger.info(rppLogger("Saving to configs ..."));
         configs.saveCalendarConfig();
-        //configs.saveNetworksConfig();
+        configs.saveNetworksConfig();
         logger.info(rppLogger("Plugin has stopped ..."));
     }
     @Listener
@@ -66,13 +69,19 @@ public class RolePlayPlus
             player.sendMessage(getTimeOutput(this));
         }
     }
+    /*@Listener
+    public void eatFood()
+    {
+
+    }*/
     //utility methods
+    public ConfigManager getConfigs()
+    {
+        return configs;
+    }
     public Calendar getCalendar()
     {
         return calendar;
     }
-    public ConfigManager getCalendarConfig()
-    {
-        return configs;
-    }
+    public Networks getNetworks() { return networks; }
 }

@@ -1,11 +1,14 @@
 package io.github.wrywolfy.rpplus;
 
 import io.github.wrywolfy.rpplus.commands.*;
+import io.github.wrywolfy.rpplus.commands.calendar.CommandPause;
+import io.github.wrywolfy.rpplus.commands.calendar.CommandResume;
+import io.github.wrywolfy.rpplus.commands.calendar.CommandTime;
+import io.github.wrywolfy.rpplus.commands.calendar.CommandTimeSet;
+import io.github.wrywolfy.rpplus.commands.networks.*;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
-
-import static io.github.wrywolfy.rpplus.UtilityMethods.rppLogger;
 
 public class CommandInitializer
 {
@@ -50,8 +53,47 @@ public class CommandInitializer
         //end calendar commands
         //------------------------------------------------------------------
         //start networks commands
+        CommandSpec pos1 = CommandSpec.builder()
+                .permission("rpp.set.node")
+                .description(Text.of("Sets node position 1"))
+                .executor(new CommandSetPos1(plugin))
+                .build();
+        CommandSpec pos2 = CommandSpec.builder()
+                .permission("rpp.set.node")
+                .description(Text.of("Sets node position 1"))
+                .executor(new CommandSetPos2(plugin))
+                .build();
+        CommandSpec loc1 = CommandSpec.builder()
+                .permission("rpp.set.node")
+                .description(Text.of("Sets node position 1"))
+                .executor(new CommandSetLoc1(plugin))
+                .build();
+        CommandSpec loc2 = CommandSpec.builder()
+                .permission("rpp.set.node")
+                .description(Text.of("Sets node position 1"))
+                .executor(new CommandSetLoc2(plugin))
+                .build();
+        CommandSpec setNode = CommandSpec.builder()
+                .permission("rpp.set.node")
+                .description(Text.of("Sets node from positions"))
+                .executor(new CommandSetNode(plugin))
+                .build();
 
 
+
+
+
+
+
+        CommandSpec set = CommandSpec.builder()
+                .permission("rpp.set")
+                .description(Text.of("Set certain RolePlay+ values:"))
+                .child(pos1, "pos1", "position1")
+                .child(pos2, "pos2", "position2")
+                .child(loc1, "loc1", "location1")
+                .child(loc2, "loc2", "location2")
+                .child(setNode, "node", "route", "network")
+                .build();
         //end networks commands
         //------------------------------------------------------------------
         CommandSpec rpp = CommandSpec.builder()
@@ -61,6 +103,7 @@ public class CommandInitializer
                 .child(pause,"pause", "stop")
                 .child(resume,"resume", "start")
                 .child(time,"time")
+                .child(set, "set")
                 .build();
         return rpp;
     }

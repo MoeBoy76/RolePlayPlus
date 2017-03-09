@@ -1,4 +1,4 @@
-package io.github.wrywolfy.rpplus.commands;
+package io.github.wrywolfy.rpplus.commands.calendar;
 
 import io.github.wrywolfy.rpplus.RolePlayPlus;
 import org.spongepowered.api.command.CommandException;
@@ -11,10 +11,10 @@ import org.spongepowered.api.entity.living.player.Player;
 
 import static io.github.wrywolfy.rpplus.UtilityMethods.rppLog;
 
-public class CommandPause implements CommandExecutor
+public class CommandResume implements CommandExecutor
 {
     private RolePlayPlus plugin;
-    public CommandPause(RolePlayPlus plugin)
+    public CommandResume(RolePlayPlus plugin)
     {
         this.plugin = plugin;
     }
@@ -24,31 +24,31 @@ public class CommandPause implements CommandExecutor
         if (src instanceof Player)
         {
             Player player = (Player) src;
-            player.sendMessage(rppLog("Pausing the Calendar ..."));
-            if (plugin.getCalendar().getStatus())
+            player.sendMessage(rppLog("Resuming the Calendar ..."));
+            if (!plugin.getCalendar().getStatus())
             {
-                plugin.getCalendar().stopCalendar();
-                player.sendMessage(rppLog("Calendar paused ..."));
+                plugin.getCalendar().startNewCalendar();
+                player.sendMessage(rppLog("Calendar resumed ..."));
                 return CommandResult.success();
             }
             else
             {
-                player.sendMessage(rppLog("Calendar is already paused ..."));
+                player.sendMessage(rppLog("Calendar is already active ..."));
                 return CommandResult.empty();
             }
         }
         else if (src instanceof ConsoleSource)
         {
-            src.sendMessage(rppLog("Pausing the Calendar ..."));
-            if (plugin.getCalendar().getStatus())
+            src.sendMessage(rppLog("Resuming the Calendar ..."));
+            if (!plugin.getCalendar().getStatus())
             {
-                plugin.getCalendar().stopCalendar();
-                src.sendMessage(rppLog("Calendar paused ..."));
+                plugin.getCalendar().startNewCalendar();
+                src.sendMessage(rppLog("Calendar resumed ..."));
                 return CommandResult.success();
             }
             else
             {
-                src.sendMessage(rppLog("Calendar is already paused ..."));
+                src.sendMessage(rppLog("Calendar is already active ..."));
                 return CommandResult.empty();
             }
         }

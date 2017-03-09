@@ -15,15 +15,15 @@ public class UtilityMethods
     {
         return ("RolePlay+ : " + ads);
     }
-    public static long calculateInterval(RolePlayPlus plugin, long time)
+    public static long calculateInterval(RolePlayPlus plugin)
     {
-        if (time < 12000)
+        if (plugin.getCalendar().isDay())
         {
-            return (((plugin.getCalendar().getDaySeconds() * 1000) / 600000) * 50);
+            return ((plugin.getCalendar().getDaySeconds() * 1000) / 12000);
         }
         else
         {
-            return (((plugin.getCalendar().getNightSeconds() * 1000) / 600000) * 50);
+            return ((plugin.getCalendar().getNightSeconds() * 1000) / 12000);
         }
     }
     public static Text getTimeOutput(RolePlayPlus plugin)

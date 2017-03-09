@@ -29,18 +29,18 @@ public class CommandReload implements CommandExecutor
             {
                 player.sendMessage(rppLog("Pausing the Calendar ..."));
                 plugin.getCalendar().stopCalendar();
-                player.sendMessage(rppLog("Reloading calendar.conf ..."));
-                plugin.getCalendarConfig().reloadConfigs();
-                plugin.getCalendar().setCalendar(plugin.getCalendarConfig().getCalendarConfig());
+                player.sendMessage(rppLog("Reloading configs ..."));
+                plugin.getConfigs().initializeConfigs();
+                plugin.getCalendar().setCalendar(plugin.getConfigs().getCalendarConfig());
                 player.sendMessage(rppLog("Resuming the Calendar ..."));
                 plugin.getCalendar().startNewCalendar();
                 return CommandResult.success();
             }
             else
             {
-                player.sendMessage(rppLog("Reloading calendar.conf ..."));
-                plugin.getCalendarConfig().reloadConfigs();
-                plugin.getCalendar().setCalendar(plugin.getCalendarConfig().getCalendarConfig());
+                player.sendMessage(rppLog("Reloading configs ..."));
+                plugin.getConfigs().initializeConfigs();
+                plugin.getCalendar().setCalendar(plugin.getConfigs().getCalendarConfig());
                 return CommandResult.success();
             }
         }
@@ -51,9 +51,9 @@ public class CommandReload implements CommandExecutor
             {
                 src.sendMessage(rppLog("Pausing the Calendar ..."));
                 plugin.getCalendar().stopCalendar();
-                src.sendMessage(rppLog("Reloading calendar.conf ..."));
-                plugin.getCalendarConfig().reloadConfigs();
-                plugin.getCalendar().setCalendar(plugin.getCalendarConfig().getCalendarConfig());
+                src.sendMessage(rppLog("Reloading configs ..."));
+                plugin.getConfigs().initializeConfigs();
+                plugin.getCalendar().setCalendar(plugin.getConfigs().getCalendarConfig());
                 src.sendMessage(rppLog("Resuming the Calendar ..."));
                 plugin.getCalendar().startNewCalendar();
                 return CommandResult.success();
@@ -61,8 +61,8 @@ public class CommandReload implements CommandExecutor
             else
             {
                 src.sendMessage(rppLog("Reloading configs ..."));
-                plugin.getCalendarConfig().reloadConfigs();
-                plugin.getCalendar().setCalendar(plugin.getCalendarConfig().getCalendarConfig());
+                plugin.getConfigs().initializeConfigs();
+                plugin.getCalendar().setCalendar(plugin.getConfigs().getCalendarConfig());
                 return CommandResult.success();
             }
         }

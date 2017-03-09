@@ -3,6 +3,7 @@ package io.github.wrywolfy.rpplus;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
+import org.spongepowered.api.Sponge;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,10 +14,9 @@ import static io.github.wrywolfy.rpplus.UtilityMethods.rppLogger;
 
 public class ConfigManager
 {
-    private Path calendarFile = Paths.get("./config/roleplayplus/calendar.conf");
-    private Path networksFile = Paths.get("./config/roleplayplus/networks.conf");
-    private ConfigurationLoader<CommentedConfigurationNode> calendarNode = HoconConfigurationLoader.builder().setPath(calendarFile).build();
-    private ConfigurationLoader<CommentedConfigurationNode> networksNode = HoconConfigurationLoader.builder().setPath(networksFile).build();
+    private String configPath = "./config/roleplayplus/";
+    private ConfigurationLoader<CommentedConfigurationNode> calendarNode = HoconConfigurationLoader.builder().setPath(Paths.get(configPath + "calendar.conf")).build();
+    private ConfigurationLoader<CommentedConfigurationNode> networksNode = HoconConfigurationLoader.builder().setPath(Paths.get(configPath + "networks.conf")).build();
     private CommentedConfigurationNode calendarConfig;
     private CommentedConfigurationNode networksConfig;
     private RolePlayPlus plugin;
@@ -24,11 +24,11 @@ public class ConfigManager
     public ConfigManager(RolePlayPlus plugin)
     {
         this.plugin = plugin;
-        reloadConfigs();
+        initializeConfigs();
     }
-    public void reloadConfigs()
+    public void initializeConfigs()
     {
-        if (Files.notExists(calendarFile))
+        if (Files.notExists(Paths.get(configPath + "calendar.conf")))
         {
             createCalendarConfig();
         }
@@ -36,14 +36,14 @@ public class ConfigManager
         {
             loadCalendarConfig();
         }
-        //if (Files.notExists(networksFile))
-        //{
-        //    createNetworksConfig();
-        //}
-        //else
-        //{
-        //    loadNetworksConfig();
-        //}
+        if (Files.notExists(Paths.get(configPath + "networks.conf")))
+        {
+            createNetworksConfig();
+        }
+        else
+        {
+            loadNetworksConfig();
+        }
     }
     public void loadCalendarConfig()
     {
@@ -61,57 +61,8 @@ public class ConfigManager
         try
         {
             Files.createDirectories(Paths.get("./config/roleplayplus/"));
-            Files.createFile(calendarFile);
+            Sponge.getAssetManager().getAsset(plugin, "calendar.conf").get().copyToFile(Paths.get(configPath + "calendar.conf"));
             calendarConfig = calendarNode.load();
-            //start set default values
-            calendarConfig.getNode("cycles", "daySeconds").setComment("How long a day cycle lasts (in seconds)");
-            calendarConfig.getNode("cycles", "daySeconds").setValue(1200);
-            calendarConfig.getNode("cycles", "nightSeconds").setComment("How long a night cycle lasts (in seconds)");
-            calendarConfig.getNode("cycles", "nightSeconds").setValue(1200);
-            calendarConfig.getNode("cycles", "currentDay").setValue(1);
-            calendarConfig.getNode("cycles", "currentMonth").setValue(1);
-            calendarConfig.getNode("cycles", "currentYear").setValue(2000);
-            calendarConfig.getNode("output").setComment("Format of the '/rpp time' command output. \n Possible arguments include : {D}, {DD}, {Day}, {DAY}, {M}, {MM}, {Month}, {MONTH}, {YY}, {YYYY}, {H}, {HH}, {H+}, {HH+}, {MIN}, {ampm}, {AMPM}");
-            calendarConfig.getNode("output").setValue("&3[&e{MM}/{DD}/{YYYY}&3] &e{H}:{MIN}{ampm}");
-            calendarConfig.getNode("week", "dayCount").setComment("How many days there are in a week. (Must match number of days provided.)");
-            calendarConfig.getNode("week", "dayCount").setValue(7);
-            //set days
-            calendarConfig.getNode("week", "day1").setValue("Sunday");
-            calendarConfig.getNode("week", "day2").setValue("Monday");
-            calendarConfig.getNode("week", "day3").setValue("Tuesday");
-            calendarConfig.getNode("week", "day4").setValue("Wednesday");
-            calendarConfig.getNode("week", "day5").setValue("Thursday");
-            calendarConfig.getNode("week", "day6").setValue("Friday");
-            calendarConfig.getNode("week", "day7").setValue("Saturday");
-            calendarConfig.getNode("months", "monthCount").setComment("How many months there are in a year. (Must match number of months provided.)");
-            calendarConfig.getNode("months", "monthCount").setValue(12);
-            //set months
-            calendarConfig.getNode("months", "month1", "name").setValue("January");
-            calendarConfig.getNode("months", "month1", "days").setValue(31);
-            calendarConfig.getNode("months", "month2", "name").setValue("February");
-            calendarConfig.getNode("months", "month2", "days").setValue(28);
-            calendarConfig.getNode("months", "month3", "name").setValue("March");
-            calendarConfig.getNode("months", "month3", "days").setValue(31);
-            calendarConfig.getNode("months", "month4", "name").setValue("April");
-            calendarConfig.getNode("months", "month4", "days").setValue(30);
-            calendarConfig.getNode("months", "month5", "name").setValue("May");
-            calendarConfig.getNode("months", "month5", "days").setValue(31);
-            calendarConfig.getNode("months", "month6", "name").setValue("June");
-            calendarConfig.getNode("months", "month6", "days").setValue(30);
-            calendarConfig.getNode("months", "month7", "name").setValue("July");
-            calendarConfig.getNode("months", "month7", "days").setValue(31);
-            calendarConfig.getNode("months", "month8", "name").setValue("August");
-            calendarConfig.getNode("months", "month8", "days").setValue(31);
-            calendarConfig.getNode("months", "month9", "name").setValue("September");
-            calendarConfig.getNode("months", "month9", "days").setValue(30);
-            calendarConfig.getNode("months", "month10", "name").setValue("October");
-            calendarConfig.getNode("months", "month10", "days").setValue(31);
-            calendarConfig.getNode("months", "month11", "name").setValue("November");
-            calendarConfig.getNode("months", "month11", "days").setValue(30);
-            calendarConfig.getNode("months", "month12", "name").setValue("December");
-            calendarConfig.getNode("months", "month12", "days").setValue(31);
-            //end set default values
-            calendarNode.save(calendarConfig);
             plugin.getLogger().info(rppLogger("New calendar.conf generated ..."));
         }
         catch (IOException x)
@@ -123,7 +74,7 @@ public class ConfigManager
     {
         try
         {
-            plugin.getCalendar().saveCalendar();
+            plugin.getCalendar().saveCalendar(calendarConfig);
             calendarNode.save(calendarConfig);
             plugin.getLogger().info(rppLogger("calendar.conf has been saved ..."));
         }
@@ -148,15 +99,8 @@ public class ConfigManager
         try
         {
             Files.createDirectories(Paths.get("./config/roleplayplus/"));
-            Files.createFile(networksFile);
+            Files.createFile(Paths.get(configPath + "networks.conf"));
             networksConfig = networksNode.load();
-            //start set default values
-
-
-
-
-
-            //end set default values
             plugin.getLogger().info(rppLogger("New networks.conf generated ..."));
             networksNode.save(networksConfig);
         }
@@ -169,6 +113,7 @@ public class ConfigManager
     {
         try
         {
+            plugin.getNetworks().saveNetworks(networksConfig);
             networksNode.save(networksConfig);
             plugin.getLogger().info(rppLogger("networks.conf has been saved ..."));
         }

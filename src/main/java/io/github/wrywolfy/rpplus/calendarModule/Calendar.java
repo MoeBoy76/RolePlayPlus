@@ -1,11 +1,17 @@
 package io.github.wrywolfy.rpplus.calendarModule;
 
+import com.google.common.collect.Lists;
 import io.github.wrywolfy.rpplus.RolePlayPlus;
+import io.github.wrywolfy.rpplus.networksModule.Networks;
+import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.storage.WorldProperties;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -16,44 +22,41 @@ public class Calendar
 {
     private boolean calendarOn = true;
     private WorldProperties world;
-    private CommentedConfigurationNode config;
     private RolePlayPlus plugin;
     private long daySeconds, nightSeconds, currentTime;
-    private int dayCount, monthCount, currentDay, currentMonth, currentYear;
+    private int currentDay, currentMonth, currentYear;
     private String outputStr;
     private Task.Builder calendarTask = Task.builder();
-    private String[] days;
-    private Month[] months;
+    List<String> days;
+    List<Month> months;
     public Calendar(CommentedConfigurationNode config, RolePlayPlus plugin)
     {
-        this.config = config;
         this.plugin = plugin;
         world = Sponge.getServer().getDefaultWorld().get();
         setCalendar(config);
     }
     public void setCalendar(CommentedConfigurationNode config)
     {
-        this.config = config;
         daySeconds = config.getNode("cycles", "daySeconds").getLong();
         nightSeconds = config.getNode("cycles", "nightSeconds").getLong();
         currentDay = config.getNode("cycles", "currentDay").getInt();
         currentMonth = config.getNode("cycles", "currentMonth").getInt();
         currentYear = config.getNode("cycles", "currentYear").getInt();
         outputStr = config.getNode("output").getString();
-        dayCount = config.getNode("week", "dayCount").getInt();
-        days = new String[dayCount];
-        for (int i = 1; i <= dayCount; i++)
+        days = Lists.newArrayList();
+        months = Lists.newArrayList();
+        Map<Object, ? extends ConfigurationNode> entryMap = config.getNode("week").getChildrenMap();
+        for (Map.Entry<Object, ? extends ConfigurationNode> entry : entryMap.entrySet())
         {
-            days[i - 1] = config.getNode("week", ("day" + i)).getString();
+            days.add(config.getNode("week", entry.getKey()).getString());
         }
-        monthCount = config.getNode("months", "monthCount").getInt();
-        months = new Month[monthCount];
-        for (int i = 1; i <= monthCount; i++)
+        entryMap = config.getNode("months").getChildrenMap();
+        for (Map.Entry<Object, ? extends ConfigurationNode> entry : entryMap.entrySet())
         {
-            months[i - 1] = new Month(config.getNode("months", ("month" + i), "name").getString(), config.getNode("months", ("month" + i), "days").getInt());
+            months.add(new Month(config.getNode("months", entry.getKey(), "name").getString(), config.getNode("months", entry.getKey(), "days").getInt()));
         }
     }
-    public void saveCalendar()
+    public void saveCalendar(CommentedConfigurationNode config)
     {
         config.getNode("cycles", "currentDay").setValue(currentDay);
         config.getNode("cycles", "currentMonth").setValue(currentMonth);
@@ -81,19 +84,19 @@ public class Calendar
     }
     private String getDay()
     {
-        int temp = 0;
-        for (int i = 0; i < monthCount; i++)
+        int day = 0;
+        for (int i = 0; i < months.size(); i++)
         {
-            temp += months[i].getDays();
+            day += months.get(i).getDays();
         }
-        temp *= currentYear;
+        day *= currentYear;
         for (int i = 0; i < currentMonth - 1; i++)
         {
-            temp += months[i].getDays();
+            day += months.get(i).getDays();
         }
-        temp += currentDay;
-        temp %= dayCount;
-        return days[temp];
+        day += currentDay;
+        day %= days.size();
+        return days.get(day);
     }
     public String formatOutput()
     {
@@ -129,10 +132,10 @@ public class Calendar
                         tempStr.append(String.format("%02d", currentMonth));
                         break;
                     case "Month":
-                        tempStr.append(months[currentMonth - 1].getName());
+                        tempStr.append(months.get(currentMonth - 1).getName());
                         break;
                     case "MONTH":
-                        tempStr.append(months[currentMonth - 1].getName().toUpperCase());
+                        tempStr.append(months.get(currentMonth - 1).getName().toUpperCase());
                         break;
                     case "YY":
                     {
@@ -258,7 +261,7 @@ public class Calendar
         str += minute;
         return str;
     }
-    private boolean isDay()
+    public boolean isDay()
     {
         if (currentTime >= 6000 && currentTime < 18000)
         {
@@ -266,7 +269,7 @@ public class Calendar
         }
         else
         {
-            return false;
+            return true;
         }
     }
     private class cycleTask implements Consumer<Task>
@@ -285,9 +288,9 @@ public class Calendar
             }
             else if (currentTime >= 23999)
             {
-                if (currentDay == months[currentMonth - 1].getDays())
+                if (currentDay == months.get(currentMonth - 1).getDays())
                 {
-                    if (currentMonth == monthCount)
+                    if (currentMonth == months.size())
                     {
                         currentYear++;
                         currentMonth = 1;
@@ -311,6 +314,12 @@ public class Calendar
             {
                 world.setWorldTime(++currentTime);
             }
+            //networks
+            if (world.getWorldTime() == 1500 || world.getWorldTime() == 7250 || world.getWorldTime() == 11000)
+            {
+                plugin.getNetworks().initiateTransports();
+            }
+            //end networks
         }
     }
     public void startNewCalendar()
@@ -324,7 +333,7 @@ public class Calendar
         else if ((plugin.getCalendar().getDaySeconds() + plugin.getCalendar().getNightSeconds()) > 1200)
         {
             calendarTask.execute(new cycleTask())
-                    .interval(calculateInterval(plugin, Sponge.getServer().getDefaultWorld().get().getWorldTime()), TimeUnit.MILLISECONDS)
+                    .interval(calculateInterval(plugin), TimeUnit.MILLISECONDS)
                     .name("Calendar Task").submit(plugin);
             plugin.getCalendar().setStatus(true);
         }
@@ -337,7 +346,7 @@ public class Calendar
     private void startCalendar()
     {
         calendarTask.execute(new cycleTask())
-                .interval(calculateInterval(plugin, Sponge.getServer().getDefaultWorld().get().getWorldTime()), TimeUnit.MILLISECONDS)
+                .interval(calculateInterval(plugin), TimeUnit.MILLISECONDS)
                 .name("Calendar Task").submit(plugin);
         plugin.getCalendar().setStatus(true);
     }

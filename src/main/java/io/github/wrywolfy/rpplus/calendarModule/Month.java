@@ -11,16 +11,16 @@ class Month
     @Setting(comment="Number of days in Month")
     private int days;
 
-    Month(String name, int days)
+    public Month(String name, int days)
     {
         this.name = name;
         this.days = days;
     }
-    String getName()
+    public String getName()
     {
         return name;
     }
-    int getDays()
+    public int getDays()
     {
         return days;
     }
